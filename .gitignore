@@ -1,0 +1,21 @@
+# Local configuration and credentials
+/config.json
+/config.local.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+# Runtime data and generated files
+logs/
+*.log
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+verified_transaction_*/
+work/
+*.bak
+*.zip
+.DS_Store
+Thumbs.db

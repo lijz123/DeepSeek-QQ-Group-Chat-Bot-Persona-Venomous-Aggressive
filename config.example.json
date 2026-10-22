@@ -1,0 +1,201 @@
+{
+  "onebot": {
+    "ws_url": "ws://127.0.0.1:3001",
+    "access_token": "",
+    "heartbeat": 25,
+    "reconnect_min": 3,
+    "reconnect_max": 60,
+    "request_timeout": 15
+  },
+  "llm": {
+    "base_url": "https://api.deepseek.com/v1",
+    "api_key": "env:DEEPSEEK_API_KEY",
+    "model": "deepseek-chat",
+    "temperature": 1.25,
+    "max_tokens": 100,
+    "timeout": 30,
+    "retries": 1
+  },
+  "persona": {
+    "name": "聊天机器人",
+    "style": "sharp",
+    "extra": ""
+  },
+  "behavior": {
+    "at_reply": true,
+    "keyword_reply": true,
+    "keywords": [
+      "聊天机器人",
+      "机器人",
+      "deepseek",
+      "ds"
+    ],
+    "question_reply": false,
+    "question_rate": 0.35,
+    "random_rate": 0.1,
+    "group_cooldown": 25,
+    "direct_cooldown": 3,
+    "user_cooldown": 60,
+    "min_gap": 1.5,
+    "per_group_per_minute": 6,
+    "global_per_minute": 25,
+    "history_size": 14,
+    "history_ttl": 900,
+    "prefix_at": false,
+    "reply_poke": true,
+    "ignore_at_all": true,
+    "max_chain": 3,
+    "max_chars": 120,
+    "followup_window": 90,
+    "followup_rate": 0.85,
+    "direct_user_cooldown": 3,
+    "taunt_keywords": [
+      "你妈",
+      "尼玛",
+      "妈死",
+      "煞笔",
+      "傻b",
+      "废物",
+      "垃圾",
+      "滚",
+      "草",
+      "cnm",
+      "sb"
+    ],
+    "mute_keywords": [
+      "机器人闭嘴",
+      "聊天机器人闭嘴",
+      "deepseek闭嘴"
+    ],
+    "quiet_keywords": [
+      "破绷",
+      "绷不住",
+      "绷了",
+      "哈哈哈",
+      "笑死",
+      "乐死",
+      "笑不活了",
+      "破防"
+    ],
+    "fixed_replies": {
+      "华为": [
+        "不敢高声语，恐惊天上人",
+        "这个我不聊，懂的都懂"
+      ]
+    },
+    "fixed_reply_per_minute": 3,
+    "sleep_wake_hours": 5,
+    "wake_replies": [
+      "干嘛，好不容易睡着了就把人家@醒",
+      "几点了还@，你不上班的？",
+      "吵什么吵，梦都做到一半了",
+      "醒了醒了，别喊了，烦不烦",
+      "你最好是有事，不然我接着睡",
+      "谁啊，大半夜的@魂呢",
+      "说吧，说完我继续睡"
+    ],
+    "mute_reply": [
+      "呜呜呜，接下来我再也不会理你了"
+    ],
+    "quote_mode": "auto",
+    "quote_busy_per_minute": 12,
+    "greeting_keywords": [
+      "早上好",
+      "早安",
+      "大家早",
+      "中午好",
+      "午安",
+      "下午好",
+      "晚上好",
+      "晚安",
+      "你好",
+      "您好",
+      "哈喽",
+      "在吗"
+    ],
+    "greeting_tone": "【这一条的语气，优先级高于上面的性格设定】对方在打招呼，你要像正常人一样热情回应，可以关心一句、接一句寒暄，绝对不要贬低、嘲讽、挑刺、反问。参考语感：「早啊，今天起这么早」「晚上好，忙完了没」「在呢，啥事你说」",
+    "game_keywords": [
+      "英雄",
+      "出装",
+      "补刀",
+      "打野",
+      "中单",
+      "上单",
+      "辅助",
+      "射手",
+      "排位",
+      "上分",
+      "段位",
+      "王者",
+      "三角洲",
+      "吃鸡",
+      "开黑",
+      "团战",
+      "送人头",
+      "战绩",
+      "皮肤",
+      "装备",
+      "兵线",
+      "水晶",
+      "野区",
+      "对局",
+      "队友",
+      "操作",
+      "意识",
+      "走位",
+      "技能",
+      "经济",
+      "开局",
+      "翻盘",
+      "打团",
+      "带线",
+      "越塔"
+    ],
+    "topic_rates": {
+      "daily": {
+        "friendly": 0.1,
+        "attack": 0.05
+      },
+      "game": {
+        "friendly": 0.0,
+        "attack": 0.1
+      }
+    },
+    "friendly_tone": "这一条是正常聊天接话：友好、自然，像普通群友搭话，不攻击、不阴阳怪气、不挑刺、不贬低。",
+    "attack_tone": "按你的性格怼他，可以刻薄。",
+    "attack_game_tone": "按你的性格怼他，但必须贴着游戏内容骂：操作、出装、意识、走位、段位、战绩、队友配合，别脱离游戏去泛泛地人身攻击。",
+    "focus_size": 4
+  },
+  "groups": {
+    "whitelist": [],
+    "blacklist": []
+  },
+  "users": {
+    "blacklist": []
+  },
+  "safety": {
+    "blocked_input": [
+      "开盒",
+      "身份证",
+      "裸聊",
+      "约炮"
+    ],
+    "blocked_output": [
+      "习近平",
+      "共产党",
+      "六四",
+      "台独",
+      "法轮功",
+      "开盒",
+      "身份证",
+      "家庭住址",
+      "自杀"
+    ],
+    "fallback_reply": "君子谨言慎行"
+  },
+  "runtime": {
+    "dry_run": false,
+    "log_file": "logs/bot.log",
+    "log_level": "INFO"
+  }
+}

@@ -7,17 +7,17 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import sys
-import time
 
-from bot import Brain, ContextStore, Msg, load_config, setup_logging
+from bot import Brain, load_config, setup_logging
 
 
 async def main() -> int:
     cfg = load_config("config.json")
     setup_logging(cfg)
     if not cfg["llm"]["api_key"]:
-        print("请先设置环境变量 DEEPSEEK_API_KEY")
+        print("先设置 DEEPSEEK_API_KEY，或在 config.json 里填 llm.api_key")
         return 1
 
     text = sys.argv[1] if len(sys.argv) > 1 else "这英雄怎么玩"
@@ -25,9 +25,9 @@ async def main() -> int:
 
     brain = Brain(cfg["llm"], cfg["safety"], cfg["persona"], int(cfg["behavior"]["max_chars"]))
     try:
-        store = ContextStore(2, 900)
-        store.add(0, Msg(speaker, text, False, time.time(), nickname=speaker))
-        transcript = store.transcript(0)
+        transcript = json.dumps({"role": "group_member",
+            "sender": {"id": "preview-user", "display_name": speaker},
+            "content": text}, ensure_ascii=False)
         answer = await brain.reply(0, transcript, speaker, False)
         print(f"{cfg['persona']['name']}：{answer or '（没生成，看上面的日志）'}")
     finally:

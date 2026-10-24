@@ -56,7 +56,7 @@ class FakeQQ:
                     {
                         "status": "ok",
                         "retcode": 0,
-                        "data": {"user_id": BOT_QQ, "nickname": "聊天机器人"},
+                        "data": {"user_id": BOT_QQ, "nickname": "大肥鱼"},
                         "echo": echo,
                     }
                 )
@@ -78,6 +78,8 @@ class FakeQQ:
         assert payload["model"]
         self.calls += 1
         content = REPLY_TEXT if self.calls == 1 else f"第{self.calls}次了，你还问？"
+        if "话轮计划与输出协议" in system:
+            content = json.dumps({"action": "reply", "text": content, "next": "wait"}, ensure_ascii=False)
         return web.json_response(
             {"choices": [{"message": {"role": "assistant", "content": content}}]}
         )
@@ -93,7 +95,7 @@ class FakeQQ:
             "self_id": BOT_QQ,
             "raw_message": text_id,
             "message": message,
-            "sender": {"user_id": USER_ID, "nickname": "测试用户", "card": "测试用户"},
+            "sender": {"user_id": USER_ID, "nickname": "青铜菜鸡", "card": "菜鸡"},
         }
 
     async def push(self, event: dict) -> None:
@@ -118,7 +120,7 @@ def unit_checks() -> None:
     text3, at3, _, _ = parse_message("[CQ:at,qq=all] 全体注意", BOT_QQ)
     check("默认忽略 @全体成员", not at3)
 
-    out = sanitize_reply("「聊天机器人：你先把补刀补明白」\n第二行", name="聊天机器人", max_chars=50)
+    out = sanitize_reply("「大肥鱼：你先把补刀补明白」\n第二行", name="大肥鱼", max_chars=50)
     check("清洗：去名字前缀/引号/多行", out == "你先把补刀补明白", repr(out))
 
     out2 = sanitize_reply("x" * 200, max_chars=20)
@@ -127,9 +129,9 @@ def unit_checks() -> None:
     out3 = sanitize_reply("我去开盒他", blocked=["开盒"], fallback="这话我没法接")
     check("清洗：命中禁用词回落", out3 == "这话我没法接", out3)
 
-    prompt = build_system_prompt("聊天机器人", "savage")
+    prompt = build_system_prompt("大肥鱼", "savage")
     check("人设提示词：含性格/规则", "嘴替" in prompt and "只发一句话" in prompt)
-    up = build_user_prompt("A：1\nB：2", "测试用户", True)
+    up = build_user_prompt("A：1\nB：2", "菜鸡", True)
     check("用户提示词：带 @ 标记", "@ 了你" in up)
 
     # 回归：昵称不能被模型输入当成正文，且身份字段必须保留。
@@ -137,23 +139,23 @@ def unit_checks() -> None:
     store.add(
         1,
         Msg(
-            "示例昵称",
+            "丝袜",
             "看着鱼尾",
             False,
             time.time(),
             sender_id="42",
-            nickname="示例昵称",
+            nickname="丝袜",
         ),
     )
     record = json.loads(store.transcript(1))
     check(
         "回归：昵称与正文分离",
-        record["sender"]["display_name"] == "示例昵称"
-        and record["sender"]["nickname"] == "示例昵称"
+        record["sender"]["display_name"] == "丝袜"
+        and record["sender"]["nickname"] == "丝袜"
         and record["content"] == "看着鱼尾",
         repr(record),
     )
-    structured = build_user_prompt(store.transcript(1), "示例昵称", True)
+    structured = build_user_prompt(store.transcript(1), "丝袜", True)
     check(
         "回归：提示词使用 JSONL 字段",
         "JSONL" in structured
@@ -175,12 +177,19 @@ async def integration() -> None:
     port = site._server.sockets[0].getsockname()[1]  # type: ignore[union-attr]
 
     cfg = load_config("config.json")
+    cfg["behavior"]["second_reply_rate"] = 0
     cfg["onebot"]["ws_url"] = f"ws://127.0.0.1:{port}/ws"
     cfg["onebot"]["heartbeat"] = 0
     cfg["onebot"]["reconnect_min"] = 1
     cfg["llm"]["base_url"] = f"http://127.0.0.1:{port}/v1"
     cfg["llm"]["api_key"] = "test-key"
     cfg["llm"]["model"] = "test-model"
+    # All proactive paths are disabled so silence is deterministic, not hidden by cooldowns.
+    cfg["behavior"]["merge_delay"] = 0.02
+    cfg["behavior"]["merge_at_delay"] = 0.02
+    cfg["behavior"]["merge_max_wait"] = 0.1
+    cfg["behavior"]["topic_rates"] = {"daily": {"friendly": 0, "attack": 0}, "game": {"friendly": 0, "attack": 0}}
+    cfg["behavior"]["followup_rate"] = 0.0
     cfg["behavior"]["random_rate"] = 0.0
     cfg["behavior"]["question_rate"] = 0.0
     cfg["groups"]["whitelist"] = []
@@ -250,7 +259,7 @@ async def integration() -> None:
         bot._last_any = 0.0
         before = len(fake.sent)
         await fake.push(
-            fake.group_event([{"type": "text", "data": {"text": "机器人出来说话"}}], 1003)
+            fake.group_event([{"type": "text", "data": {"text": "肥鱼出来说话"}}], 1003)
         )
         await asyncio.sleep(1.5)
         check("触发：关键词命中并发言", len(fake.sent) > before)

@@ -8,113 +8,72 @@
     "request_timeout": 15
   },
   "llm": {
+    "provider": "deepseek",
+    "chatgpt_profile": "",
+    "chatgpt_model": "auto",
+    "chatgpt_timeout": 90,
     "base_url": "https://api.deepseek.com/v1",
     "api_key": "env:DEEPSEEK_API_KEY",
     "model": "deepseek-chat",
-    "temperature": 1.25,
+    "temperature": 0.8,
+    "semantic_pipeline": true,
+    "semantic_review_policy": "adaptive",
     "max_tokens": 100,
+    "planning_max_tokens": 320,
     "timeout": 30,
-    "retries": 1,
-    "planning_max_tokens": 192
+    "retries": 1
+  },
+  "search": {
+    "enabled": true,
+    "timeout": 8,
+    "count": 3,
+    "cache_ttl": 300,
+    "per_group_per_minute": 6,
+    "global_per_minute": 12,
+    "max_answer_chars": 600
+  },
+  "output": {
+    "unlimited": true,
+    "daily_max_chars": 100,
+    "max_tokens": 393216,
+    "chunk_chars": 1500
+  },
+  "file_delivery": {
+    "enabled": true
   },
   "persona": {
-    "name": "聊天机器人",
+    "name": "大肥鱼",
     "style": "sharp",
     "extra": ""
   },
   "behavior": {
+    "merge_delay": 1.6,
+    "merge_at_delay": 0.6,
+    "concurrent_reply_window": 1.0,
+    "merge_max_wait": 5.0,
+    "merge_max_messages": 20,
+    "pending_message_limit": 100,
+    "followup_max_turns": 6,
+    "followup_grace_window": 30,
+    "model_reply_planning": true,
+    "model_burst_max_messages": 3,
+    "second_reply_rate": 0.6,
+    "second_reply_delay_min": 0.8,
+    "second_reply_delay_max": 0.8,
     "at_reply": true,
     "keyword_reply": true,
     "keywords": [
-      "聊天机器人",
-      "机器人",
+      "大肥鱼",
+      "肥鱼",
+      "若凡",
+      "若帆",
       "deepseek",
+      "Deepseek",
       "ds"
     ],
     "question_reply": false,
     "question_rate": 0.35,
-    "random_rate": 0.03,
-    "group_cooldown": 25,
-    "direct_cooldown": 3,
-    "user_cooldown": 60,
-    "min_gap": 1.5,
-    "per_group_per_minute": 18,
-    "global_per_minute": 25,
-    "history_size": 14,
-    "history_ttl": 900,
-    "prefix_at": false,
-    "reply_poke": true,
-    "ignore_at_all": true,
-    "max_chain": 3,
-    "max_chars": 120,
-    "followup_window": 120,
-    "followup_rate": 1.0,
-    "direct_user_cooldown": 3,
-    "taunt_keywords": [
-      "你妈",
-      "尼玛",
-      "妈死",
-      "煞笔",
-      "傻b",
-      "废物",
-      "垃圾",
-      "滚",
-      "草",
-      "cnm",
-      "sb"
-    ],
-    "mute_keywords": [
-      "机器人闭嘴",
-      "聊天机器人闭嘴",
-      "deepseek闭嘴"
-    ],
-    "quiet_keywords": [
-      "破绷",
-      "绷不住",
-      "绷了",
-      "哈哈哈",
-      "笑死",
-      "乐死",
-      "笑不活了",
-      "破防"
-    ],
-    "fixed_replies": {
-      "华为": [
-        "不敢高声语，恐惊天上人",
-        "这个我不聊，懂的都懂"
-      ]
-    },
-    "fixed_reply_per_minute": 3,
-    "sleep_wake_hours": 5,
-    "wake_replies": [
-      "干嘛，好不容易睡着了就把人家@醒",
-      "几点了还@，你不上班的？",
-      "吵什么吵，梦都做到一半了",
-      "醒了醒了，别喊了，烦不烦",
-      "你最好是有事，不然我接着睡",
-      "谁啊，大半夜的@魂呢",
-      "说吧，说完我继续睡"
-    ],
-    "mute_reply": [
-      "呜呜呜，接下来我再也不会理你了"
-    ],
-    "quote_mode": "auto",
-    "quote_busy_per_minute": 12,
-    "greeting_keywords": [
-      "早上好",
-      "早安",
-      "大家早",
-      "中午好",
-      "午安",
-      "下午好",
-      "晚上好",
-      "晚安",
-      "你好",
-      "您好",
-      "哈喽",
-      "在吗"
-    ],
-    "greeting_tone": "【这一条的语气，优先级高于上面的性格设定】对方在打招呼，你要像正常人一样热情回应，可以关心一句、接一句寒暄，绝对不要贬低、嘲讽、挑刺、反问。参考语感：「早啊，今天起这么早」「晚上好，忙完了没」「在呢，啥事你说」",
+    "random_rate": 0.1,
     "game_keywords": [
       "英雄",
       "出装",
@@ -165,24 +124,95 @@
     "friendly_tone": "这一条是正常聊天接话：友好、自然，像普通群友搭话，不攻击、不阴阳怪气、不挑刺、不贬低。",
     "attack_tone": "按你的性格怼他，可以刻薄。",
     "attack_game_tone": "按你的性格怼他，但必须贴着游戏内容骂：操作、出装、意识、走位、段位、战绩、队友配合，别脱离游戏去泛泛地人身攻击。",
-    "focus_size": 4,
+    "group_cooldown": 25,
+    "direct_cooldown": 3,
+    "user_cooldown": 60,
+    "min_gap": 1.5,
+    "per_group_per_minute": 18,
+    "global_per_minute": 25,
+    "history_size": 28,
+    "poke_context_window": 45,
+    "history_ttl": 900,
+    "quote_reply": true,
+    "prefix_at": false,
+    "reply_poke": true,
+    "ignore_at_all": true,
+    "max_chain": 3,
+    "max_chars": 120,
+    "followup_window": 120,
+    "followup_rate": 1.0,
+    "retaliate_on_abuse": true,
+    "direct_user_cooldown": 3,
+    "taunt_keywords": [
+      "你妈",
+      "尼玛",
+      "妈死",
+      "傻逼",
+      "煞笔",
+      "傻b",
+      "废物",
+      "垃圾",
+      "滚",
+      "草",
+      "cnm",
+      "sb"
+    ],
+    "mute_keywords": [
+      "肥鱼闭嘴"
+    ],
+    "mute_reply": [
+      "呜呜呜，接下来我再也不会理你了"
+    ],
+    "quote_mode": "auto",
+    "quote_busy_per_minute": 12,
+    "greeting_keywords": [
+      "早上好",
+      "早安",
+      "大家早",
+      "中午好",
+      "午安",
+      "下午好",
+      "晚上好",
+      "晚安",
+      "你好",
+      "您好",
+      "哈喽",
+      "在吗",
+      "小家伙"
+    ],
+    "greeting_tone": "【这一条的语气，优先级高于上面的性格设定】对方在打招呼，你要像正常人一样热情回应，可以关心一句、接一句寒暄，绝对不要贬低、嘲讽、挑刺、反问。参考语感：「早啊，今天起这么早」「晚上好，忙完了没」「在呢，啥事你说」",
+    "quiet_keywords": [
+      "破绷",
+      "绷不住",
+      "绷了",
+      "哈哈哈",
+      "笑死",
+      "乐死",
+      "笑不活了",
+      "破防"
+    ],
+    "fixed_replies": {
+      "华为": [
+        "不敢高声语，恐惊天上人",
+        "这个我不聊，懂的都懂"
+      ]
+    },
+    "image_replies": [],
+    "image_reply_per_minute": 3,
     "combo_replies": [],
     "combo_reply_per_minute": 3,
-    "followup_grace_window": 30,
-    "followup_max_turns": 6,
-    "image_replies": {},
-    "image_reply_per_minute": 3,
-    "merge_at_delay": 0.6,
-    "merge_delay": 1.6,
-    "merge_max_messages": 20,
-    "merge_max_wait": 5.0,
-    "model_burst_max_messages": 3,
-    "model_reply_planning": true,
-    "pending_message_limit": 100,
-    "quote_reply": true,
-    "second_reply_delay_max": 0.8,
-    "second_reply_delay_min": 0.8,
-    "second_reply_rate": 0.6
+    "sleep_wake_hours": 5,
+    "wake_replies": [
+      "干嘛，好不容易睡着了就把人家@醒",
+      "几点了还@，你不上班的？",
+      "吵什么吵，梦都做到一半了",
+      "醒了醒了，别喊了，烦不烦",
+      "你最好是有事，不然我接着睡",
+      "谁啊，大半夜的@魂呢",
+      "说吧，说完我继续睡"
+    ],
+    "fixed_reply_per_minute": 3,
+    "focus_size": 4
   },
   "groups": {
     "whitelist": [],
@@ -193,8 +223,6 @@
   },
   "safety": {
     "blocked_input": [
-      "开盒",
-      "身份证",
       "裸聊",
       "约炮"
     ],
@@ -204,12 +232,36 @@
       "六四",
       "台独",
       "法轮功",
-      "开盒",
-      "身份证",
-      "家庭住址",
       "自杀"
     ],
     "fallback_reply": "君子谨言慎行"
+  },
+  "owner_chat": {
+    "enabled": false,
+    "user_ids": [],
+    "max_chars": 500
+  },
+  "duel": {
+    "enabled": true,
+    "idle_seconds": 60,
+    "expiry_seconds": 180,
+    "max_groups": 256,
+    "poll_interval": 1,
+    "generation_timeout": 15
+  },
+  "voice": {
+    "enabled": false,
+    "character_id": "auto",
+    "max_chars": 200,
+    "list_timeout": 10,
+    "send_timeout": 30,
+    "cache_seconds": 300
+  },
+  "notifications": {
+    "enabled": true,
+    "database": "logs/reminders.sqlite3",
+    "poll_interval": 1.0,
+    "grace_seconds": 300
   },
   "runtime": {
     "dry_run": false,

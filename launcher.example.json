@@ -1,0 +1,6 @@
+{
+  "provider": "deepseek",
+  "napcat_dir": "../napcat",
+  "napcat_user_data": "qqappdata2/QQ",
+  "wait_seconds": 120
+}

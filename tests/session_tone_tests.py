@@ -6,6 +6,9 @@ evidence of a real model's friendliness, comprehension, or semantic quality.
 """
 from __future__ import annotations
 
+from layout_support import app_directory, project_directory, configure_test_paths
+configure_test_paths()
+
 import asyncio
 import contextlib
 import hashlib
@@ -19,7 +22,7 @@ import unittest
 from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parent
-SOURCE = Path(sys.argv[1]).resolve()
+SOURCE = app_directory(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith('-') else None)
 RESULT = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else ROOT / "session_tone_tests_results.json"
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(SOURCE))
@@ -146,10 +149,13 @@ class SessionToneTests(unittest.IsolatedAsyncioTestCase):
         self.assert_friendly()
         self.assertEqual(len(self.brain.calls), 2)
 
-    async def test_07_taunt_does_not_silently_switch_locked_session(self):
+    async def test_07_direct_abuse_overrides_friendly_for_this_turn(self):
         await self.greet()
+        previous = self.bot._friendly_sessions[(GROUP, ALICE)]
         await self.say("你这个垃圾")
-        self.assert_friendly()
+        self.assertIn("[program:direct_bot_abuse]", self.brain.calls[-1]["tone"])
+        self.assertNotIn(FRIENDLY, self.brain.calls[-1]["tone"])
+        self.assertEqual(self.bot._friendly_sessions[(GROUP, ALICE)], previous)
 
     async def test_08_different_user_does_not_inherit(self):
         await self.greet()

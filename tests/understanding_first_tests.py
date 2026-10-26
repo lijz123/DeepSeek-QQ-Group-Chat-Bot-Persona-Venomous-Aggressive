@@ -6,6 +6,9 @@ contact a provider, or send a real QQ message. Human contrast labels are input
 fixtures, never counted as the model understanding them correctly.
 """
 from __future__ import annotations
+
+from layout_support import app_directory, project_directory, configure_test_paths
+configure_test_paths()
 import asyncio
 import contextlib
 from dataclasses import FrozenInstanceError, fields
@@ -19,7 +22,7 @@ import unittest
 from unittest.mock import AsyncMock
 
 ROOT = Path(__file__).resolve().parent
-SOURCE = Path(sys.argv[1]).resolve()
+SOURCE = app_directory(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith('-') else None)
 RESULT = Path(sys.argv[2]).resolve() if len(sys.argv) > 2 else ROOT/'understanding_first_results.json'
 sys.dont_write_bytecode = True
 sys.path.insert(0,str(SOURCE))
@@ -59,7 +62,7 @@ def transcript(rows):
 
 class SchemaTests(unittest.TestCase):
     def test_01_frame_is_immutable_compact_not_free_reasoning(self):
-        self.assertEqual([f.name for f in fields(TurnUnderstanding)],['act','target'])
+        self.assertEqual([f.name for f in fields(TurnUnderstanding)],['act','target','meaning','unresolved'])
         with self.assertRaises((FrozenInstanceError,AttributeError)):
             U.target='self'
 
